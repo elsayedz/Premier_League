@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Club {
+  clubName                   String               @id @db.VarChar(30)
+  website                    String               @db.VarChar(2048)
+  Match_ClubToMatch_awayTeam Match[]              @relation("ClubToMatch_awayTeam")
+  Match_ClubToMatch_homeTeam Match[]              @relation("ClubToMatch_homeTeam")
+  PlayerTeamInSeason         PlayerTeamInSeason[]
+  Stadium                    Stadium[]
+  User                       User[]
+}
+
+model Match {
+  date                      DateTime           @db.Date
+  homeTeam                  String             @db.VarChar(30)
+  awayTeam                  String             @db.VarChar(30)
+  result                    String             @db.VarChar(10)
+  possessionH               Int
+  possessionA               Int
+  foulH                     Int
+  foulA                     Int
+  yellowCardsH              Int
+  yellowCardsA              Int
+  redCardsH                 Int
+  redCardsA                 Int
+  goalsH                    Int
+  goalsA                    Int
+  shotH                     Int
+  shotA                     Int
+  stadiumName               String             @db.VarChar(50)
+  season                    String             @db.VarChar(45)
+  Club_ClubToMatch_awayTeam Club               @relation("ClubToMatch_awayTeam", fields: [awayTeam], references: [clubName], onDelete: NoAction, map: "match_ibfk_2")
+  Club_ClubToMatch_homeTeam Club               @relation("ClubToMatch_homeTeam", fields: [homeTeam], references: [clubName], onDelete: NoAction, map: "match_ibfk_1")
+  Stadium                   Stadium            @relation(fields: [stadiumName], references: [stadiumName], onDelete: NoAction, map: "match_ibfk_3")
+  UserMatchReviews          UserMatchReviews[]
+
+  @@id([homeTeam, awayTeam, season])
+  @@index([awayTeam], map: "awayTeam")
+  @@index([stadiumName], map: "stadiumName")
+}
+
+model Player {
+  name        String   @db.VarChar(100)
+  dateOfBirth DateTime @db.Date
+  nationality String   @db.VarChar(20)
+  height      Int?
+  weight      Int?
+  position    String   @db.VarChar(15)
+
+  @@id([name, dateOfBirth])
+}
+
+model PlayerTeamInSeason {
+  name        String   @db.VarChar(100)
+  dateOfBirth DateTime @db.Date
+  clubName    String   @db.VarChar(30)
+  season      String   @db.VarChar(10)
+  Club        Club     @relation(fields: [clubName], references: [clubName], onDelete: NoAction, map: "playerteaminseason_ibfk_1")
+
+  @@id([name, dateOfBirth, season, clubName])
+  @@index([clubName], map: "clubName")
+}
+
+model Stadium {
+  stadiumName            String  @id @db.VarChar(50)
+  addressName            String? @db.VarChar(100)
+  street                 String  @db.VarChar(45)
+  city                   String  @db.VarChar(45)
+  zipCode                String  @db.VarChar(45)
+  capacity               Int
+  recordLeagueAttendance Int
+  pitchL                 Decimal @db.Decimal(5, 2)
+  pitchW                 Decimal @db.Decimal(5, 2)
+  buildingDate           Int
+  homeClub               String  @db.VarChar(30)
+  Club                   Club    @relation(fields: [homeClub], references: [clubName], onDelete: Cascade, map: "stadium_club")
+  Match                  Match[]
+
+  @@index([homeClub], map: "stadium_club_idx")
+}
+
+model User {
+  email            String             @id @db.VarChar(320)
+  username         String             @db.VarChar(40)
+  age              Int
+  gender           String             @db.Char(1)
+  birthdate        DateTime           @db.Date
+  supportClub      String             @db.VarChar(30)
+  Club             Club               @relation(fields: [supportClub], references: [clubName], onDelete: NoAction, map: "user_ibfk_1")
+  UserMatchReviews UserMatchReviews[]
+
+  @@index([supportClub], map: "supportClub")
+}
+
+model UserMatchReviews {
+  email      String   @db.VarChar(320)
+  matchDate  DateTime @db.Date
+  homeTeam   String   @db.VarChar(30)
+  rating     Int
+  textReview String   @db.Text
+  awayTeam   String   @db.VarChar(30)
+  season     String   @db.VarChar(45)
+  User       User     @relation(fields: [email], references: [email], onDelete: NoAction, map: "usermatchreviews_ibfk_1")
+  Match      Match    @relation(fields: [homeTeam, awayTeam, season], references: [homeTeam, awayTeam, season], onDelete: NoAction, map: "usermatchreviews_ibfk_3")
+
+  @@id([email, homeTeam, awayTeam, season])
+  @@index([homeTeam, awayTeam, season], map: "homeTeam")
+  @@index([season], map: "season_fk_idx")
+  @@index([matchDate], map: "usermatchreviews_ibfk_2_idx")
+}
