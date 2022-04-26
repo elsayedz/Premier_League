@@ -5,7 +5,8 @@ const app = express();
 const db = new PrismaClient()
 
 const usersRoutes = require('./src/users/router')
-const matchReviews = require('./src/matchReviews/router')
+const matchReviewsRoutes = require('./src/matchReviews/router')
+const playerRoutes = require('./src/players/router')
 app.use((req, res, next) => {
     let d = new Date();
     console.log(req.method);
@@ -14,7 +15,8 @@ app.use((req, res, next) => {
   });
 
   app.use('/users', usersRoutes);
-  app.use('/reviews', matchReviews);
+  app.use('/reviews', matchReviewsRoutes);
+  app.use('/player', playerRoutes)
 
 app.get('/', async (req, res) => {
   res.send("Still Here");
