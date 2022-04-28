@@ -8,6 +8,8 @@ const usersRoutes = require('./src/users/router')
 const matchReviewsRoutes = require('./src/matchReviews/router')
 const playerRoutes = require('./src/players/router')
 const clubsRoutes = require('./src/clubs/router')
+const matchesRoutes = require('./src/matches/router')
+
 app.use((req, res, next) => {
     let d = new Date();
     console.log(req.method);
@@ -19,7 +21,7 @@ app.use((req, res, next) => {
   app.use('/reviews', matchReviewsRoutes);
   app.use('/player', playerRoutes)
   app.use('/club', clubsRoutes)
-
+  app.use('/matches', matchesRoutes)
 app.get('/', async (req, res) => {
   res.send("Still Here");
 });
