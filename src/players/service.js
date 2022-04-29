@@ -21,12 +21,7 @@ model Player {
 
 async function readWithName(playerName){
     try {
-
-       const player = await db.player.findMany({
-           where: {
-               name: playerName
-           }
-       })
+        const player = await db.$queryRaw`SELECT * FROM player WHERE \`name\` = ${playerName};`
        console.log("Player info: " + JSON.stringify(player))
        
        if(player.length == 0)
@@ -41,12 +36,7 @@ async function readWithName(playerName){
 
 async function readWithPos(playerPos){
     try {
-
-       const players = await db.player.findMany({
-           where: {
-               position: playerPos
-           }
-       })
+        const players = await db.$queryRaw`SELECT * FROM player WHERE position = ${playerPos};`
        console.log(`Fetched ${players.length} with pos ${playerPos}`)
        
        if(players.length == 0)
@@ -62,11 +52,8 @@ async function readWithPos(playerPos){
 async function readHist(playerName){
     try {
 
-       const player = await db.playerTeamInSeason.findMany({
-            where:{
-                name: playerName
-            }
-       })
+        const player = await db.$queryRaw`SELECT * FROM playerTeamInSeason WHERE \`name\` = ${playerName};`
+    
        console.log("Player Hist: " + JSON.stringify(player))
 
        if(player.length == 0)

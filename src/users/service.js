@@ -23,18 +23,10 @@ async function create(param){
 
     try{
         const date = (new Date(param['birthdate']))
-        const user = await db.user.create({
-            data: {
-                email: param['email'],
-                username: param['username'],
-                age: param['age'],
-                gender: param['gender'],
-                birthdate: date,
-                supportClub: param['supportClub']
-            }
-        })
+        const user = await db.$queryRaw`INSERT INTO User values (${param['email']}, ${param['password']}, ${param['username']}, ${param['age']}, ${param['gender']}, ${date}, ${param['supportClub']});`
         return user.email;
     }catch(err){
+        console.log(err);
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
             // The .code property can be accessed in a type-safe manner
             if (err.code === 'P2002') {
@@ -45,4 +37,18 @@ async function create(param){
     
 }
 
-module.exports = {create}
+async function read(email, pass){
+
+    try {
+        
+        const user = await db.$queryRaw`SELECT email,username,age,gender,birthdate,supportClub FROM User WHERE email = ${email} AND password = ${pass};`
+        return user;
+        
+    } catch (err) {
+        console.log("get user error "+ err);
+        throw err;
+    }
+
+}
+
+module.exports = {create,read}

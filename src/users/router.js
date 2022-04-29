@@ -7,8 +7,8 @@ const controller = require('./controller')
 router.use(express.json())
 
 router.route('').post(controller.create);
-router.route('').get(controller.read);
-router.route('').put(controller.update);
+router.route('/signIn').post(controller.read);
+
 // router.route('').delete(controller.delete);
 
 

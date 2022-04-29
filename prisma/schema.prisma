@@ -88,6 +88,7 @@ model Stadium {
 
 model User {
   email            String             @id @db.VarChar(320)
+  password         String?            @db.VarChar(50)
   username         String             @db.VarChar(40)
   age              Int
   gender           String             @db.Char(1)

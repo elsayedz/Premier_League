@@ -20,17 +20,10 @@ model Club {
 async function read(stad){
 
 try {
-    
-    const club = await db.stadium.findMany({
-        
-        where:{
-            stadiumName:stad
-        },
-        include:{
-            Club: true
-        }
-    })
-
+    const club = await db.$queryRaw`SELECT * FROM Stadium S INNER JOIN Club C
+        ON S.homeClub = C.clubName
+        WHERE S.stadiumName = ${stad};`
+  
     if(club.length == 0)
         throw "Not Found"
 
@@ -50,15 +43,9 @@ async function readByCity(city){
 */
 try {
     
-    const clubs = await db.stadium.findMany({
-          
-        where:{
-            city: city
-        },
-        select:{
-            homeClub:true
-        }
-    })
+    const clubs = await db.$queryRaw`SELECT * FROM Stadium S INNER JOIN Club C
+        ON S.homeClub = C.clubName
+        WHERE S.city = ${city};`
 
     if(clubs.length == 0)
         throw "Not Found"

@@ -26,17 +26,15 @@ async function create(param){
 
     try{
         const date = new Date(param['matchDate'])
-        const review = await db.userMatchReviews.create({
-            data: {
-                email: param['email'],
-                matchDate: date,
-                homeTeam: param['homeTeam'],
-                rating: param['rating'],
-                textReview: param['textReview'],
-                awayTeam: param['awayTeam'],
-                season: param['season']
-            }
-        })
+        const review = await db.$queryRaw`INSERT INTO userMatchReviews VALUES( 
+        ${param['email']},
+        ${date},
+        ${param['homeTeam']},
+        ${param['rating']},
+        ${param['textReview']},
+        ${param['awayTeam']},
+        ${param['season']});`
+        
         return review.email;
     }catch(err){
         if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -52,12 +50,9 @@ async function create(param){
 
 async function read(userEmail){
     try {
-
-        const userReviews = await db.userMatchReviews.findMany({
-            where: {
-                email: userEmail,
-            }
-        })
+        const userReviews = await db.$queryRaw`SELECT * FROM userMatchReviews WHERE email = ${userEmail};`
+    
+        
         
         console.log("Got Reviews : " + JSON.stringify(userReviews))
         return userReviews;
@@ -69,18 +64,14 @@ async function read(userEmail){
 async function update( homeTeam, awayTeam, season, textReview ){
 
     try {
-        const newReview = await db.userMatchReviews.updateMany({
-            where:{
-               
-                        homeTeam: homeTeam,
-                        awayTeam: awayTeam,
-                        season: season
-                    
-                },
-            data:{
-                textReview: textReview
-            }
-        });
+    
+        const newReview = await db.$queryRaw`
+            UPDATE userMatchReviews 
+            SET 
+            textReview = ${textReview}
+            WHERE
+                homeTeam = ${homeTeam}
+                AND awayTeam = ${awayTeam} AND season = ${season};`
 
         return newReview;
     } catch (err) {

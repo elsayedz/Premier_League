@@ -10,12 +10,15 @@ async function create(req, res){
     console.log(body)
     try{
 
-        if(reqLength != 6) 
+        if(reqLength != 7) 
             throw "Bad Request";
         
         const email = body['email'];
         if(!isValidEmail(email))
             throw "Invalid Email";
+        const pass = body['password']
+        if(pass == null)
+            throw "Invalid Passwor";
 
         let user = await service.create(body)
         res.status(200).send('Created user successfully with email' + user);
@@ -28,8 +31,11 @@ async function create(req, res){
 
 async function read(req, res){
     console.log("Read User Called")
+    const email = req.body['email'];
+    const pass = req.body['password'];
     try{
-        res.status(200).send('Created user successfully');
+        const user = await  service.read(email, pass);
+        res.status(200).send(user);
     } catch (err){
         console.log(`Error ${err}`);
         res.status(500).send(err)
