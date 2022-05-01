@@ -1,6 +1,6 @@
 const express = require('express');
 const {PrismaClient} = require('@prisma/client');
-
+const PORT = process.env.PORT || 3000
 const app = express();
 const db = new PrismaClient()
 
@@ -23,4 +23,4 @@ app.use((req, res, next) => {
   app.use('/club', clubsRoutes)
   app.use('/matches', matchesRoutes)
 
-app.listen(3000, () => console.log('Example app is listening on port 3000.'));
+app.listen(PORT, () => console.log('Example app is listening on port 3000.'));
