@@ -140,7 +140,8 @@ async function readMostShots(){
             select awayTeam, sum(shotA) as ya FROM \`Match\`
             group by 1) as shots
             group by 1
-            order by 2 DESC;`
+            order by 2 DESC
+            limit 10;`
 
         if(shots.length == 0)
             throw "Not Found"
