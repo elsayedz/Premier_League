@@ -1,5 +1,6 @@
 const express = require('express');
 const {PrismaClient} = require('@prisma/client');
+const cors = require('cors')
 const PORT = process.env.PORT || 3000
 const app = express();
 const db = new PrismaClient()
@@ -10,6 +11,7 @@ const playerRoutes = require('./src/players/router')
 const clubsRoutes = require('./src/clubs/router')
 const matchesRoutes = require('./src/matches/router')
 
+app.use(cors())
 app.use((req, res, next) => {
     let d = new Date();
     console.log(req.method);
