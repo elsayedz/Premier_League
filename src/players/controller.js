@@ -10,7 +10,7 @@ async function read(req, res){
         console.log("Get payer with name Called")
         try{
             const playerName = req.query.name;
-            if(playerName == null )
+            if(playerName == null || playerName == '')
                 throw 'Name Field Empty'
             const player = await service.readWithName(playerName);
             res.status(200).send(player);
@@ -47,6 +47,8 @@ async function readHist(req, res){
     console.log(`Requested player: ${req.query.name}`)
     const playerName = req.query.name;
     try{
+        if(playerName == null || playerName == '')
+            throw 'Bad Request';
         const player = await service.readHist(playerName);
         res.status(200).send(player);
     } catch (err){
@@ -60,6 +62,8 @@ async function readPlayersWithNat(req, res){
     console.log(`Requested players Nat: ${req.query.nat}`)
     const nat = req.query.nat;
     try{
+        if(nat == null || nat == '')
+            throw 'Bad Request';
         const playersNat = await service.readPlayersWithNat(nat);
         res.status(200).send(playersNat);
     } catch (err){

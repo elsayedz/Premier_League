@@ -74,6 +74,9 @@ async function readPlayersWithNat(nat){
         where p.nationality = ${nat};`
 
         console.log(`Fetched ${Object.keys(players).length} player with Nationality: ${nat}` )
+        if(players.length == 0)
+            throw 'Not Found';
+            
        return players;
     } catch (err) {
         throw err;

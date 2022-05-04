@@ -50,12 +50,23 @@ async function create(param){
 
 async function read(userEmail){
     try {
-        const userReviews = await db.$queryRaw`SELECT * FROM userMatchReviews WHERE email = ${userEmail};`
+        const userReviews = await db.$queryRaw`SELECT * FROM userMatchReviews INNER JOIN User on userMatchReviews.email = User.email WHERE userMatchReviews.email = ${userEmail};`
     
         
         
         console.log("Got Reviews : " + JSON.stringify(userReviews))
         return userReviews;
+    } catch (err) {
+        throw err;
+    }
+}
+
+async function readAll(userEmail){
+    try {
+        const allReviews = await db.$queryRaw`SELECT * FROM userMatchReviews INNER JOIN User on userMatchReviews.email = User.email ORDER BY matchDate DESC;`
+
+        console.log("Got Reviews : " + JSON.stringify(allReviews))
+        return allReviews;
     } catch (err) {
         throw err;
     }
@@ -83,13 +94,7 @@ async function getMatchReviews(homeTeam, awayTeam, season){
     
     try {
         
-        const matchReviews = await db.userMatchReviews.findMany({
-            where: {
-                homeTeam: homeTeam,
-                awayTeam: awayTeam,
-                season: season
-            }
-        })
+        const matchReviews = await db.$queryRaw`SELECT * FROM userMatchReviews INNER JOIN User on userMatchReviews.email = User.email WHERE homeTeam = ${homeTeam} AND awayTeam = ${awayTeam} AND season = ${season};`
         
         console.log("Match Reviews: " + JSON.stringify(matchReviews))
         return matchReviews
@@ -101,7 +106,7 @@ async function getMatchReviews(homeTeam, awayTeam, season){
 
 }
 
-module.exports = {create, read, update,  getMatchReviews}
+module.exports = {create, read, update,  getMatchReviews, readAll}
 
 
 

@@ -10,6 +10,9 @@ router.use(express.json())
 router.route('').post(controller.create);
 
 // Get all reviews for certain user 
+router.route('/all').get(controller.readAll);
+
+// Get all reviews for certain user 
 router.route('').get(controller.read);
 
 // Get all reviews for certain match

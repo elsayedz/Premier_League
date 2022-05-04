@@ -42,6 +42,8 @@ async function read(email, pass){
     try {
         
         const user = await db.$queryRaw`SELECT email,username,age,gender,birthdate,supportClub FROM User WHERE email = ${email} AND password = ${pass};`
+        if(user.length == 0)
+            throw 'No user found';
         return user;
         
     } catch (err) {

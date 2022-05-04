@@ -6,8 +6,13 @@ const controller = require('./controller')
 // To handle JSON requests
 router.use(express.json())
 
+router.route('/getDate').get(controller.readMatchDate);
+
 // Get top 10 teams by matches won
 router.route('/mostWins').get(controller.read);
+
+// Get top 10 teams by matches won
+router.route('/mostWinsPerSeason').get(controller.readWinsPerSeason);
 
 // Get top 10 teams by home matches won
 router.route('/mostHomeWins').get(controller.readHomeWins);

@@ -30,6 +30,17 @@ async function read(req, res){
     }
 };
 
+async function readAll(req, res){
+    console.log("Read ALL Review Called")
+    try{
+        const userReviews = await service.readAll();
+        res.status(200).send(userReviews);
+    } catch (err){
+        console.log(`Error ${err}`);
+        res.status(500).send(err)
+    }
+};
+
 async function update(req, res){
     console.log("Update called");
     const newText = req.body['textReview'];
@@ -64,4 +75,4 @@ async function getMatchReviews(req, res){
 
 
 
-module.exports = {create, read, update ,getMatchReviews}
+module.exports = {create, read, readAll ,update ,getMatchReviews}

@@ -34,6 +34,8 @@ async function read(req, res){
     const email = req.body['email'];
     const pass = req.body['password'];
     try{
+        if(email == null || email == '')
+            throw 'Bad Request';
         const user = await  service.read(email, pass);
         res.status(200).send(user);
     } catch (err){
