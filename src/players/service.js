@@ -69,7 +69,7 @@ async function readPlayersWithNat(nat){
     try {
 
         const players = await db.$queryRaw`SELECT p.name, p.nationality, ps.clubName, ps.season
-        FROM Premier_League.PlayerTeamInSeason ps INNER JOIN Player p
+        FROM PlayerTeamInSeason ps INNER JOIN Player p
         on ps.name = p.name and ps.dateOfBirth = p.dateOfBirth
         where p.nationality = ${nat};`
 
