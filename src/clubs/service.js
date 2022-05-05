@@ -20,9 +20,9 @@ model Club {
 async function read(stad){
 
 try {
-    const club = await db.$queryRaw`SELECT * FROM Stadium S INNER JOIN Club C
+    const club = await db.$queryRawUnsafe(`SELECT * FROM Stadium S INNER JOIN Club C
         ON S.homeClub = C.clubName
-        WHERE S.stadiumName = ${stad};`
+        WHERE S.stadiumName like '%${stad}%';`);
   
     if(club.length == 0)
         throw "Not Found"
@@ -43,9 +43,9 @@ async function readByCity(city){
 */
 try {
     
-    const clubs = await db.$queryRaw`SELECT * FROM Stadium S INNER JOIN Club C
+    const clubs = await db.$queryRawUnsafe(`SELECT * FROM Stadium S INNER JOIN Club C
         ON S.homeClub = C.clubName
-        WHERE S.city = ${city};`
+        WHERE S.city like '%${city}%';`);
 
     if(clubs.length == 0)
         throw "Not Found"

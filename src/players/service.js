@@ -21,7 +21,8 @@ model Player {
 
 async function readWithName(playerName){
     try {
-        const player = await db.$queryRaw`SELECT * FROM player WHERE \`name\` = ${playerName};`
+        console.log(playerName);
+        const player = await db.$queryRawUnsafe(`SELECT * FROM player WHERE \`name\` like '%${playerName}%';`);
        console.log("Player info: " + JSON.stringify(player))
        
        if(player.length == 0)
@@ -36,7 +37,7 @@ async function readWithName(playerName){
 
 async function readWithPos(playerPos){
     try {
-        const players = await db.$queryRaw`SELECT * FROM player WHERE position = ${playerPos};`
+        const players = await db.$queryRawUnsafe(`SELECT * FROM player WHERE position like '%${playerPos}%';`);
        console.log(`Fetched ${players.length} with pos ${playerPos}`)
        
        if(players.length == 0)
@@ -52,7 +53,7 @@ async function readWithPos(playerPos){
 async function readHist(playerName){
     try {
 
-        const player = await db.$queryRaw`SELECT * FROM playerTeamInSeason WHERE \`name\` = ${playerName};`
+        const player = await db.$queryRawUnsafe(`SELECT * FROM playerTeamInSeason WHERE \`name\` like '%${playerName}%';`);
     
        console.log("Player Hist: " + JSON.stringify(player))
 
@@ -68,10 +69,10 @@ async function readPlayersWithNat(nat){
     
     try {
 
-        const players = await db.$queryRaw`SELECT p.name, p.nationality, ps.clubName, ps.season
+        const players = await db.$queryRawUnsafe(`SELECT p.name, p.nationality, ps.clubName, ps.season
         FROM PlayerTeamInSeason ps INNER JOIN Player p
         on ps.name = p.name and ps.dateOfBirth = p.dateOfBirth
-        where p.nationality = ${nat};`
+        where p.nationality like '%${nat}%';`)
 
         console.log(`Fetched ${Object.keys(players).length} player with Nationality: ${nat}` )
         if(players.length == 0)
