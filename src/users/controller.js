@@ -33,6 +33,8 @@ async function read(req, res){
     console.log("Read User Called")
     const email = req.body['email'];
     const pass = req.body['password'];
+    console.log("USER IS LOGGING IN: " + email)
+    console.log("USER IS LOGGING IN: " + password);
     try{
         if(email == null || email == '')
             throw 'Bad Request';
